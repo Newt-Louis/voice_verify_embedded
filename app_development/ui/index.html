@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Verification Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; }
+        .status-badge { background: #4caf50; padding: 10px; border-radius: 20px; font-size: 0.8em; }
+        .btn-mic { width: 100px; height: 100px; border-radius: 50%; background: #e91e63; color: white; border: none; font-size: 2em; margin-top: 50px; }
+        .log-box { background: #1e1e1e; border: 1px solid #333; margin: 20px; height: 200px; overflow-y: scroll; padding: 10px; text-align: left; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Xác thực Giọng nói</h1>
+        <div class="status-badge">Trạng thái: {{ status }}</div>
+        
+        <button class="btn-mic" @click="startRecord">🎤</button>
+        <p>Bấm để thử giọng nói thủ công</p>
+
+        <div class="log-box">
+            <div v-for="log in logs">[{{ log.time }}] {{ log.msg }}</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    status: 'Đang chạy ngầm...',
+                    logs: [{ time: new Date().toLocaleTimeString(), msg: 'Hệ thống đã sẵn sàng.' }]
+                }
+            },
+            methods: {
+                startRecord() {
+                    this.logs.unshift({ time: new Date().toLocaleTimeString(), msg: 'Bắt đầu ghi âm và trích xuất Vector AI...' });
+                    // Tại đây Vue.js sẽ gọi tới hàm Python Bridge thông qua API của Mobile App
+                    if (window.pythonBridge) {
+                        window.pythonBridge.processVoice();
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
