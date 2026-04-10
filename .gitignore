@@ -12,6 +12,8 @@ env/
 .pyright/
 pretrained_models/whisper-small/*
 !pretrained_models/whisper-small/.gitkeep
+quantization/*
+!quantization/.gitkeep
 
 # ===== Python bytecode / cache =====
 __pycache__/
