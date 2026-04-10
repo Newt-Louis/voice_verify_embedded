@@ -4,6 +4,12 @@ if not hasattr(torchaudio, 'list_audio_backends'):
     torchaudio.list_audio_backends = lambda: ["soundfile"]
 import huggingface_hub
 import urllib.error
+import subprocess
+import numpy as np
+import os
+from speechbrain.inference.speaker import EncoderClassifier
+from torch.nn import CosineSimilarity
+
 _orig_download = huggingface_hub.hf_hub_download
 def _patched_download(*args, **kwargs):
     if 'use_auth_token' in kwargs:
@@ -19,12 +25,6 @@ def _patched_download(*args, **kwargs):
         # Các file khác (weights, config) thì vẫn tải bình thường
     return _orig_download(*args, **kwargs)
 huggingface_hub.hf_hub_download = _patched_download
-
-import numpy as np
-import librosa
-import os
-from speechbrain.inference.speaker import EncoderClassifier
-from torch.nn import CosineSimilarity
 
 # ==========================================
 # CẤU HÌNH THỬ NGHIỆM THỰC TẾ
@@ -59,17 +59,37 @@ def get_memory_usage():
 
 def load_audio(path):
     """
-    Đọc file âm thanh (hỗ trợ .m4a qua librosa)
-    Chuyển về chuẩn 16000Hz, Mono để AI xử lý chính xác.
+    Sử dụng FFMPEG trực tiếp từ hệ thống để đọc mọi định dạng (.m4a, .wav, .mp3, ...)
+    Chuyển về chuẩn PCM 16kHz, Mono, 32-bit float để AI xử lý chính xác.
+    Ưu điểm: Không phụ thuộc vào librosa cồng kềnh.
     """
     try:
-        import warnings
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            signal, _ = librosa.load(path, sr=16000)
+        # Lệnh ffmpeg: Đọc input, chuyển 1 kênh (mono), 16000Hz, format float 32 bit, xuất ra pipe:1 (stdout)
+        command = [
+            '/usr/bin/ffmpeg',
+            '-i', path,
+            '-ac', '1',
+            '-ar', '16000',
+            '-f', 'f32le',
+            '-hide_banner',
+            '-loglevel', 'error',
+            'pipe:1'
+        ]
+        
+        # Chạy lệnh và lấy kết quả byte thô
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = process.communicate()
+        
+        if process.returncode != 0:
+            print(f"[FFMPEG ERROR] {err.decode()}")
+            return None
+            
+        # Chuyển đổi byte sang numpy array (float32)
+        signal = np.frombuffer(out, dtype=np.float32)
         return torch.tensor(signal).unsqueeze(0)
+        
     except Exception as e:
-        print(f"[ERROR] Không thể đọc file {path}: {e}")
+        print(f"[ERROR] Không thể đọc file qua ffmpeg {path}: {e}")
         return None
 
 def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
@@ -78,8 +98,13 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
     print("="*60)
     ram_baseline = get_memory_usage()
     print(f"[*] RAM Cơ bản (Chưa nạp gì): {ram_baseline:.2f} MB")
+    
+    # Kiểm tra đường dẫn dữ liệu
+    if not os.path.exists(VOICE_DIR):
+        print(f"❌ Lỗi: Không tìm thấy thư mục âm thanh tại {VOICE_DIR}")
+        return
+
     # 1. Tải mô hình gốc (Bản chưa nén)
-    # Ghi chú: Sau này khi có bản ONNX, ta sẽ thêm logic load ONNX Runtime tại đây.
     print("[1/3] Đang nạp mô hình AI...")
     model = EncoderClassifier.from_hparams(
         source="speechbrain/spkrec-ecapa-voxceleb",
@@ -89,6 +114,7 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
     ram_after_load = get_memory_usage()
     print(f"[*] RAM sau khi nạp mô hình: {ram_after_load:.2f} MB")
     print(f"    -> MÔ HÌNH NGỐN (Tĩnh): {ram_after_load - ram_baseline:.2f} MB")
+
     # 2. Tạo "Vân tay giọng nói" gốc
     print(f"[2/3] Đang trích xuất vân tay từ file gốc: {len(ENROLLMENT_FILES)}")
     enrollment_embeddings = []
@@ -103,14 +129,11 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
             current_ram = get_memory_usage()
             if current_ram > peak_ram:
                 peak_ram = current_ram
+    
     if not enrollment_embeddings:
         print("❌ Lỗi: Không đọc được file mẫu nào. Dừng hệ thống.")
         return
-    # sig_init = load_audio(INIT_VOICE)
-    # if sig_init is None: return
-    #
-    # with torch.no_grad():
-    #     emb_init = model.encode_batch(sig_init)
+    
     master_signature = torch.mean(torch.stack(enrollment_embeddings), dim=0)
 
     # 3. Chạy vòng lặp kiểm tra
@@ -139,5 +162,6 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
     print("\n=== TỔNG KẾT TÀI NGUYÊN (RAM) ===")
     print(f"- Lượng RAM cao nhất hệ thống đã dùng (Peak RAM): {peak_ram:.2f} MB")
     print(f"- Lượng RAM THỰC TẾ phục vụ AI (Peak - Baseline): {peak_ram - ram_baseline:.2f} MB")
+
 if __name__ == "__main__":
     run_live_test()

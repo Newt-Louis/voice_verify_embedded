@@ -1,0 +1,10 @@
+{
+    "v0_float32": {
+        "version": "v0_float32",
+        "storage_mb": 79.5377426147461,
+        "static_ram_mb": 99.31640625,
+        "peak_ram_mb": 365.82421875,
+        "latency_ms": 74.32443228546097,
+        "accuracy_drop": 0.0
+    }
+}
