@@ -1,3 +1,4 @@
+# Important
 .venv
 vox1_test_wav
 .idea
@@ -9,6 +10,8 @@ env/
 .mypy_cache/
 .ruff_cache/
 .pyright/
+pretrained_models/whisper-small/*
+!pretrained_models/whisper-small/.gitkeep
 
 # ===== Python bytecode / cache =====
 __pycache__/
@@ -28,9 +31,6 @@ pip-wheel-metadata/
 # ===== OS / Editor =====
 .DS_Store
 Thumbs.db
-
-downloads/*
-!downloads/.gitkeep
 
 # ===== AI CLI ======
 GEMINI.md
