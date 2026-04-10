@@ -90,8 +90,7 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
         if sig_test is not None:
             with torch.no_grad():
                 emb_test = model.encode_batch(sig_test)
-            
-            # Tính độ tương đồng Cosine (từ -1 đến 1)
+
             score = cos_sim(emb_init, emb_test).item()
             
             status = "CHẤP NHẬN ✅" if score >= THRESHOLD else "TỪ CHỐI ❌"
@@ -101,6 +100,4 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
     print(f"Ngưỡng bảo mật hiện tại: {THRESHOLD}")
 
 if __name__ == "__main__":
-    # Hiện tại chạy test với bản PyTorch gốc
-    # Sau này sẽ bổ sung các bản nén v1, v2, v3 để so sánh ngay tại đây
     run_live_test()
