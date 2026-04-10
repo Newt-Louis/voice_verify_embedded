@@ -29,19 +29,26 @@ from torch.nn import CosineSimilarity
 # ==========================================
 # CẤU HÌNH THỬ NGHIỆM THỰC TẾ
 # ==========================================
-VOICE_DIR = "my_test_voice"
-# File giọng "chủ nhân" dùng để đăng ký ban đầu (Enrollment)
-INIT_VOICE = os.path.join(VOICE_DIR, "testing_init_my_voice.m4a")
-
+VOICE_DIR = "my_test_voice/pharse_2"
+ENROLLMENT_FILES = [
+    "my_voice_eng_1.m4a",
+    "my_voice_eng_2.m4a",
+    "my_voice_vie_1.m4a",
+    "my_voice_vie_2.m4a"
+]
 # Danh sách các file cần kiểm tra (Verification)
 TEST_FILES = [
-    "hey_celia.m4a",             # Giọng thật của chủ
-    "command_open.m4a",          # Giọng thật của chủ
-    "testing_another_person.m4a"  # Giọng người khác
+    "eng_1.m4a",
+    "eng_2.m4a",
+    "vie_1.m4a",
+    "vie_2.m4a",
+    "myvoice_Recording_testpass_1.m4a",
+    "myvoice_Recording_testpass_2.m4a",
+    "myvoice_Recording_testpass_3.m4a",
 ]
 
 # Ngưỡng chấp nhận (Threshold) - Thường ECAPA nằm khoảng 0.25 - 0.35
-THRESHOLD = 0.3
+THRESHOLD = 0.4
 
 cos_sim = CosineSimilarity(dim=-1)
 
@@ -51,8 +58,10 @@ def load_audio(path):
     Chuyển về chuẩn 16000Hz, Mono để AI xử lý chính xác.
     """
     try:
-        # librosa tự động xử lý m4a nếu hệ thống có ffmpeg/av
-        signal, _ = librosa.load(path, sr=16000)
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            signal, _ = librosa.load(path, sr=16000)
         return torch.tensor(signal).unsqueeze(0)
     except Exception as e:
         print(f"[ERROR] Không thể đọc file {path}: {e}")
@@ -66,16 +75,32 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
     # 1. Tải mô hình gốc (Bản chưa nén)
     # Ghi chú: Sau này khi có bản ONNX, ta sẽ thêm logic load ONNX Runtime tại đây.
     print("[1/3] Đang nạp mô hình AI...")
-    model = EncoderClassifier.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb", 
-                                           savedir="pretrained_models/ecapa")
+    model = EncoderClassifier.from_hparams(
+        source="speechbrain/spkrec-ecapa-voxceleb",
+        savedir="pretrained_models/ecapa",
+        run_opts={"device": "cpu"}
+    )
 
     # 2. Tạo "Vân tay giọng nói" gốc
-    print(f"[2/3] Đang trích xuất vân tay từ file gốc: {os.path.basename(INIT_VOICE)}")
-    sig_init = load_audio(INIT_VOICE)
-    if sig_init is None: return
-    
-    with torch.no_grad():
-        emb_init = model.encode_batch(sig_init)
+    print(f"[2/3] Đang trích xuất vân tay từ file gốc: {len(ENROLLMENT_FILES)}")
+    enrollment_embeddings = []
+    for f_name in ENROLLMENT_FILES:
+        f_path = os.path.join(VOICE_DIR, f_name)
+        sig = load_audio(f_path)
+        if sig is not None:
+            with torch.no_grad():
+                emb = model.encode_batch(sig)
+                enrollment_embeddings.append(emb)
+
+    if not enrollment_embeddings:
+        print("❌ Lỗi: Không đọc được file mẫu nào. Dừng hệ thống.")
+        return
+    # sig_init = load_audio(INIT_VOICE)
+    # if sig_init is None: return
+    #
+    # with torch.no_grad():
+    #     emb_init = model.encode_batch(sig_init)
+    master_signature = torch.mean(torch.stack(enrollment_embeddings), dim=0)
 
     # 3. Chạy vòng lặp kiểm tra
     print("[3/3] Đang tiến hành so sánh đối soát...")
@@ -91,7 +116,7 @@ def run_live_test(model_name="ECAPA-TDNN PyTorch (Original)"):
             with torch.no_grad():
                 emb_test = model.encode_batch(sig_test)
 
-            score = cos_sim(emb_init, emb_test).item()
+            score = cos_sim(master_signature, emb_test).item()
             
             status = "CHẤP NHẬN ✅" if score >= THRESHOLD else "TỪ CHỐI ❌"
             print(f"{f_name:<30} | {score:<15.4f} | {status}")
