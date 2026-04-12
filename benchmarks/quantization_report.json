@@ -6,5 +6,13 @@
         "peak_ram_mb": 365.82421875,
         "latency_ms": 74.32443228546097,
         "accuracy_drop": 0.0
+    },
+    "v1_fp16": {
+        "version": "v1_fp16",
+        "storage_mb": 42.976613998413086,
+        "static_ram_mb": 112.7890625,
+        "peak_ram_mb": 364.56640625,
+        "latency_ms": 93.57981342899231,
+        "accuracy_drop": 0.025718629360198975
     }
 }
