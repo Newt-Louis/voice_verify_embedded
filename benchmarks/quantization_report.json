@@ -14,5 +14,21 @@
         "peak_ram_mb": 364.56640625,
         "latency_ms": 93.57981342899231,
         "accuracy_drop": 0.025718629360198975
+    },
+    "v1_fp16_proper": {
+        "version": "v1_fp16_proper",
+        "storage_mb": 42.976613998413086,
+        "static_ram_mb": 113.37109375,
+        "peak_ram_mb": 365.14453125,
+        "latency_ms": 92.16987371369864,
+        "accuracy_drop": 0.025718629360198975
+    },
+    "v2_int8": {
+        "version": "v2_int8",
+        "storage_mb": 20.477428436279297,
+        "static_ram_mb": 20.125,
+        "peak_ram_mb": 468.0859375,
+        "latency_ms": 62.97381957171768,
+        "accuracy_drop": 0.2624827027320862
     }
 }

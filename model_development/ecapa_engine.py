@@ -14,7 +14,7 @@ class ECAPAEngine:
 
     def _extract_fbank(self, waveform):
         if isinstance(waveform, np.ndarray):
-            waveform = torch.from_numpy(waveform)
+            waveform = torch.from_numpy(waveform.copy())
         if waveform.dim() == 1:
             waveform = waveform.unsqueeze(0)
             
