@@ -8,35 +8,32 @@ This project aims to build a robust Voice Authentication and Speech-to-Text syst
 ### Phase 1: ECAPA-TDNN (Speaker Verification) - [SUCCESS]
 - Successfully quantized ECAPA-TDNN using ONNX.
 - Achieved **RAM < 20MB** and **Model Size ~18MB (INT8)**.
-- This phase established the baseline for embedding-based speaker verification.
 
 ### Phase 2: Whisper-Small STT (Research & Pivot)
 
 #### 🧪 Attempt 1: PyTorch/ONNX Quantization (Legacy Research)
-- **Method:** Directly exporting `openai/whisper-small` from safetensors to ONNX via PyTorch/Hugging Face Optimum.
-- **Goal:** Use standard ONNX Runtime for inference.
-- **Results:**
-    - **FP32 Model Size:** ~1.1 GB (Encoder: 337MB | Decoder: 739MB).
-    - **Outcome:** FAILED to meet RAM constraints (< 400MB).
-- **Lessons Learned:** 
-    - The PyTorch/ONNX runtime overhead and the raw model structure were too heavy for the target 1GB RAM hardware.
-    - Standard quantization didn't squeeze the model enough while maintaining Vietnamese accuracy on typical STT engines.
+- **Method:** Exporting from safetensors to ONNX.
+- **Outcome:** FAILED (RAM > 1GB, too heavy for embedded).
 
-#### 🚀 Attempt 2: Whisper.cpp & GGML/GGUF (Current Path - SUCCESS)
-- **Method:** Switched to `whisper.cpp` (C++ implementation) and GGML quantization.
-- **Tooling:** Built `whisper-quantize` using CMake from the `whisper.cpp` submodule.
-- **Quantized Models (Multilingual):**
-    - **Q8_0:** ~252MB | Peak RAM ~437MB.
-    - **Q5_1:** ~181MB | Peak RAM **~366MB** (PASSED threshold).
-    - **Q4_1:** ~153MB | Peak RAM **~338MB** (PASSED threshold).
-- **Outcome:** Successfully achieved the goal of running Whisper-Small STT under 400MB RAM.
+#### 🚀 Attempt 2: Whisper.cpp & GGML (Optimization Success)
+- **Method:** Used `whisper.cpp` with GGML quantization.
+- **Results:** 
+    - **Q5_0 (Beam 1):** ~167MB Model | **~351MB Peak RAM**.
+- **Outcome:** SUCCESS in resource management.
+
+#### 🔀 Attempt 3: Strategic Pivot at Step 4 (Current)
+- **Observation:** Whisper-Small Multilingual struggles with Vietnamese accuracy (hallucinations) despite prompting. English accuracy remains superior.
+- **Pivot:** 
+    - **Current Path:** Proceed to **Phase 3 (Deployment)** using the Q5_0 model as an English STT Demo to showcase RAM efficiency and hardware stability.
+    - **Deferred Path:** Fine-tuning with a dedicated Vietnamese dataset will be required for production-grade Vietnamese STT, followed by re-quantization.
 
 ## 🛠️ Technical Stack
 - **Verification:** ECAPA-TDNN (ONNX INT8).
-- **Transcription:** Whisper Small (GGML Q5_1 via whisper.cpp).
+- **Transcription:** Whisper Small (GGML Q5_0 via whisper.cpp).
 - **VAD:** Silero VAD (ONNX).
-- **Audio Processing:** FFmpeg (C/C++ integration).
+- **Audio Processing:** FFmpeg.
 
-## ⚠️ Critical Notes
-- **Never** install libraries into the system Python; always use `.venv`.
-- **Always** prioritize `whisper.cpp` for STT on embedded devices due to its superior memory management (memory-mapped files).
+## ⚠️ Lessons Learned
+1. **Tool Choice:** `whisper.cpp` is mandatory for < 400MB RAM targets.
+2. **Model Limitations:** Multilingual models in small sizes have a strong English bias; Vietnamese STT requires specialized fine-tuning for high accuracy.
+3. **Efficiency vs. Search:** Using `beam-size = 1` (Greedy Search) is highly recommended for short commands to save ~100MB RAM.
