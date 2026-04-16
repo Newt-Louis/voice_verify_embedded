@@ -10,11 +10,22 @@ env/
 .mypy_cache/
 .ruff_cache/
 .pyright/
+
+# Model Files - Ignore contents but keep directories
 pretrained_models/whisper-small/*
 !pretrained_models/whisper-small/.gitkeep
+
+pretrained_models/ggml-whispersmall-multilingual/*
+!pretrained_models/ggml-whispersmall-multilingual/.gitkeep
+
+quantization/ggml-whispersmall-multilingual/**/*
+!quantization/ggml-whispersmall-multilingual/**/.gitkeep
+
+# Other quantization files
 quantization/*
 !quantization/.gitkeep
 !quantization/scripts/*
+!quantization/ggml-whispersmall-multilingual/
 
 # ===== Python bytecode / cache =====
 __pycache__/
@@ -37,4 +48,5 @@ Thumbs.db
 
 # ===== AI CLI ======
 GEMINI.md
+PLAN.md
 AGENTS.md
