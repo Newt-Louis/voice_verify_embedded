@@ -46,12 +46,13 @@ def main():
     whisper_cli = os.path.join(project_root, "whisper.cpp/build/bin/whisper-cli")
     base_model = os.path.join(project_root, "pretrained_models/ggml-whispersmall-multilingual/ggml-small.bin")
     q8_0_model = os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q8_0/ggml-model-q8_0.bin")
+    q5_1_model = os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q5_1/ggml-model-q5_1.bin")
     
-    test_audio_m4a = os.path.join(project_root, "my_test_voice/pharse_2/test_ggml_whispersmall_pharse1.m4a")
+    # Sử dụng file audio my_voice_vie_1.m4a làm test case chuẩn
+    test_audio_m4a = os.path.join(project_root, "my_test_voice/pharse_2/my_voice_vie_1.m4a")
     test_audio_wav = os.path.join(project_root, "model_development/tests/tmp_test.wav")
     
-    # Dựng Initial Prompt theo dạng "Dictionary" (Danh sách từ khóa mồi)
-    # Đây là cách "bơm mồi" từ vựng hiệu quả nhất cho Whisper
+    # Dictionary Prompt tiếng Việt
     keywords = [
         "giọng nói", "xác thực", "danh tính", "chìa khóa", "bật", "mở", "tắt",
         "thiết bị", "thông minh", "người dùng", "hệ thống", "an ninh", "bảo mật",
@@ -67,23 +68,20 @@ def main():
     
     models = [
         {"id": "M0", "name": "Base (FP16)", "path": base_model},
-        {"id": "M1", "name": "Q8_0 (8-bit)", "path": q8_0_model}
+        {"id": "M1", "name": "Q8_0 (8-bit)", "path": q8_0_model},
+        {"id": "M2", "name": "Q5_1 (5-bit)", "path": q5_1_model}
     ]
     
     all_results = []
     
     for m in models:
         if not os.path.exists(m["path"]):
+            print(f"BỎ QUA {m['name']}: Không tìm thấy file model.")
             continue
             
-        print(f"--- ĐANG BENCHMARK MODEL: {m['name']} (Dictionary Prompt) ---")
+        print(f"--- ĐANG BENCHMARK MODEL: {m['name']} ---")
         
-        # Thêm các tham số tối ưu hóa:
-        # -l vi: Ngôn ngữ tiếng Việt
-        # --prompt: Danh sách từ khóa mồi
-        # --beam-size 5: Tìm kiếm chùm sâu hơn
-        # --entropy-thold 2.4: Ngưỡng entropy để tránh ảo giác
-        # --logprob-thold -1.0: Ngưỡng log probability để chọn từ tin cậy hơn
+        # Chạy với các tham số tối ưu hóa
         cmd = (
             f'/usr/bin/time -v {whisper_cli} -m {m["path"]} -f {test_audio_wav} '
             f'-l vi -t 4 --prompt "{initial_prompt}" --beam-size 5 '
@@ -103,10 +101,15 @@ def main():
         print(f"   Result: {res['transcript']}")
         print("-" * 30)
     
-    report_path = os.path.join(project_root, "benchmarks/q8_0_report_dict_prompt.json")
+    # Xuất báo cáo tổng hợp
+    report_path = os.path.join(project_root, "benchmarks/quantization_report.json")
     with open(report_path, "w", encoding="utf-8") as f:
-        json.dump({"date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "prompt": initial_prompt, "results": all_results}, f, ensure_ascii=False, indent=2)
+        json.dump({
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "results": all_results
+        }, f, ensure_ascii=False, indent=2)
     
+    print(f"\nĐã lưu báo cáo tổng hợp tại: {report_path}")
     if os.path.exists(test_audio_wav): os.remove(test_audio_wav)
 
 if __name__ == "__main__":

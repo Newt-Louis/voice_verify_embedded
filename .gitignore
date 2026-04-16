@@ -18,14 +18,24 @@ pretrained_models/whisper-small/*
 pretrained_models/ggml-whispersmall-multilingual/*
 !pretrained_models/ggml-whispersmall-multilingual/.gitkeep
 
+# Quantization
+# 1. GGML Models contents ignored
 quantization/ggml-whispersmall-multilingual/**/*
 !quantization/ggml-whispersmall-multilingual/**/.gitkeep
 
-# Other quantization files
+# 2. Exports contents ignored
+quantization/exports/ecapa/*
+!quantization/exports/ecapa/.gitkeep
+quantization/exports/whisper/*
+!quantization/exports/whisper/.gitkeep
+
+# 3. Scripts and structure tracked
+# We ignore everything in quantization first, then whitelist what we want
 quantization/*
 !quantization/.gitkeep
-!quantization/scripts/*
+!quantization/scripts/
 !quantization/ggml-whispersmall-multilingual/
+!quantization/exports/
 
 # ===== Python bytecode / cache =====
 __pycache__/

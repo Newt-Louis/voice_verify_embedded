@@ -1,50 +1,32 @@
 {
-    "v0_float32": {
-        "version": "v0_float32",
-        "storage_mb": 79.5377426147461,
-        "static_ram_mb": 99.31640625,
-        "peak_ram_mb": 365.82421875,
-        "latency_ms": 74.32443228546097,
-        "accuracy_drop": 0.0
+  "date": "2026-04-16 23:21:03",
+  "results": [
+    {
+      "peak_ram_mb": 824.58984375,
+      "init_ms": 286.44,
+      "transcribe_ms": 4380.56,
+      "transcript": "Giọng nói của tôi là chịu khóa xác thật dân tính",
+      "model_id": "M0",
+      "model_name": "Base (FP16)",
+      "file_size_mb": 465.01347255706787
     },
-    "v1_fp16": {
-        "version": "v1_fp16",
-        "storage_mb": 42.976613998413086,
-        "static_ram_mb": 112.7890625,
-        "peak_ram_mb": 364.56640625,
-        "latency_ms": 93.57981342899231,
-        "accuracy_drop": 0.025718629360198975
+    {
+      "peak_ram_mb": 607.75390625,
+      "init_ms": 182.66,
+      "transcribe_ms": 3571.63,
+      "transcript": "Giọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_id": "M1",
+      "model_name": "Q8_0 (8-bit)",
+      "file_size_mb": 252.21310329437256
     },
-    "v1_fp16_proper": {
-        "version": "v1_fp16_proper",
-        "storage_mb": 42.976613998413086,
-        "static_ram_mb": 113.37109375,
-        "peak_ram_mb": 365.14453125,
-        "latency_ms": 92.16987371369864,
-        "accuracy_drop": 0.025718629360198975
-    },
-    "v2_int8": {
-        "version": "v2_int8",
-        "storage_mb": 20.477428436279297,
-        "static_ram_mb": 20.125,
-        "peak_ram_mb": 468.0859375,
-        "latency_ms": 62.97381957171768,
-        "accuracy_drop": 0.2624827027320862
-    },
-    "v2_int8_dynamic": {
-        "version": "v2_int8_dynamic",
-        "storage_mb": 20.412156105041504,
-        "static_ram_mb": 0.0,
-        "peak_ram_mb": 45.28125,
-        "latency_ms": 32.76543171419429,
-        "accuracy_drop": 0.0026009168941527605
-    },
-    "v2_int8_static": {
-        "version": "v2_int8_static",
-        "storage_mb": 20.477428436279297,
-        "static_ram_mb": 24.9375,
-        "peak_ram_mb": 96.6875,
-        "latency_ms": 22.621056998884473,
-        "accuracy_drop": 0.2624827027320862
+    {
+      "peak_ram_mb": 537.06640625,
+      "init_ms": 92.32,
+      "transcribe_ms": 4782.92,
+      "transcript": "Dọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_id": "M2",
+      "model_name": "Q5_1 (5-bit)",
+      "file_size_mb": 181.27964687347412
     }
+  ]
 }

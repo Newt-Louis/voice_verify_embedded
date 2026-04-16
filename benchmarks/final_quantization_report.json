@@ -1,0 +1,69 @@
+{
+  "date": "2026-04-16 23:25:00",
+  "data": [
+    {
+      "peak_ram_mb": 769.14453125,
+      "transcribe_ms": 4019.92,
+      "transcript": "giọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Base (FP16)",
+      "beam_size": 5,
+      "file_size_mb": 465.01347255706787
+    },
+    {
+      "peak_ram_mb": 654.3671875,
+      "transcribe_ms": 3582.63,
+      "transcript": "Dọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Base (FP16)",
+      "beam_size": 1,
+      "file_size_mb": 465.01347255706787
+    },
+    {
+      "peak_ram_mb": 552.515625,
+      "transcribe_ms": 3105.86,
+      "transcript": "giọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Q8_0 (8-bit)",
+      "beam_size": 5,
+      "file_size_mb": 252.21310329437256
+    },
+    {
+      "peak_ram_mb": 437.55859375,
+      "transcribe_ms": 2764.34,
+      "transcript": "Dọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Q8_0 (8-bit)",
+      "beam_size": 1,
+      "file_size_mb": 252.21310329437256
+    },
+    {
+      "peak_ram_mb": 481.8828125,
+      "transcribe_ms": 3984.61,
+      "transcript": "Dọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Q5_1 (5-bit)",
+      "beam_size": 5,
+      "file_size_mb": 181.27964687347412
+    },
+    {
+      "peak_ram_mb": 366.6328125,
+      "transcribe_ms": 3622.93,
+      "transcript": "Dọng nói của tôi là chịu khóa xác thật danh tính",
+      "model_name": "Q5_1 (5-bit)",
+      "beam_size": 1,
+      "file_size_mb": 181.27964687347412
+    },
+    {
+      "peak_ram_mb": 453.4921875,
+      "transcribe_ms": 3533.7,
+      "transcript": "dọng nói của tôi là chịu khóa xác thật dân tính",
+      "model_name": "Q4_1 (4-bit)",
+      "beam_size": 5,
+      "file_size_mb": 152.90626430511475
+    },
+    {
+      "peak_ram_mb": 338.53515625,
+      "transcribe_ms": 3347.05,
+      "transcript": "Dạm nói của tôi là chịu khóa xác thật dân tính",
+      "model_name": "Q4_1 (4-bit)",
+      "beam_size": 1,
+      "file_size_mb": 152.90626430511475
+    }
+  ]
+}
