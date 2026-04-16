@@ -1,0 +1,24 @@
+{
+  "date": "2026-04-16 17:42:28",
+  "prompt_used": "Chào mừng bạn đến với hệ thống xác thực bằng giọng nói tiếng Việt. Giọng nói của tôi là chìa khóa xác thực danh tính người dùng. Vui lòng bật xác thực để truy cập vào thiết bị thông minh. Kết nối bluetooth và wifi đang hoạt động ổn định. Đăng nhập vào server thành công. Bạn có thể ra lệnh bằng tiếng Việt như: mở cửa, tắt đèn, bật điều hòa, kiểm tra trạng thái xe tự hành. Chúng tôi cam kết bảo mật thông tin cá nhân, mã hóa dữ liệu đầu cuối, sử dụng trí tuệ nhân tạo để nhận diện chính xác 100%. Các thông số kỹ thuật bao gồm bộ nhớ RAM dưới bốn trăm MB, tốc độ xử lý nhanh, độ trễ thấp, hoạt động offline hoàn toàn. Hãy thử nói: Alo alo bật xác thực danh tính ngay bây giờ.",
+  "results": [
+    {
+      "peak_ram_mb": 839.84375,
+      "init_ms": 419.25,
+      "transcribe_ms": 5561.16,
+      "transcript": "Giọng nói của tôi là chịu ác xác thật danh tính.",
+      "model_id": "M0",
+      "model_name": "Base (FP16)",
+      "file_size_mb": 465.01347255706787
+    },
+    {
+      "peak_ram_mb": 622.85546875,
+      "init_ms": 153.74,
+      "transcribe_ms": 4064.13,
+      "transcript": "Giọng nói của tôi là chị quái xác thật danh tính.",
+      "model_id": "M1",
+      "model_name": "Q8_0 (8-bit)",
+      "file_size_mb": 252.21310329437256
+    }
+  ]
+}

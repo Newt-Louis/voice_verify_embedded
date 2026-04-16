@@ -1,0 +1,23 @@
+{
+  "date": "2026-04-16 17:25:32",
+  "results": [
+    {
+      "peak_ram_mb": 749.95703125,
+      "init_ms": 377.11,
+      "transcribe_ms": 4600.85,
+      "transcript": "Vọng nói của tôi là chịu khóa sắc thật dân tính",
+      "model_id": "M0",
+      "model_name": "Base (FP16)",
+      "file_size_mb": 465.01347255706787
+    },
+    {
+      "peak_ram_mb": 533.15234375,
+      "init_ms": 139.65,
+      "transcribe_ms": 3173.02,
+      "transcript": "Vọng nói của tôi là chịu khóa sát thật dân tính",
+      "model_id": "M1",
+      "model_name": "Q8_0 (8-bit)",
+      "file_size_mb": 252.21310329437256
+    }
+  ]
+}

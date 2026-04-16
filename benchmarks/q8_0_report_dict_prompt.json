@@ -1,0 +1,24 @@
+{
+  "date": "2026-04-16 17:57:27",
+  "prompt": "giọng nói, xác thực, danh tính, chìa khóa, bật, mở, tắt, thiết bị, thông minh, người dùng, hệ thống, an ninh, bảo mật, alo, xin chào, bluetooth, wifi, mạng, kết nối, server, máy chủ, xe tự hành, điều khiển, ra lệnh, tiếng Việt, trí tuệ nhân tạo, đăng nhập, truy cập, mật khẩu, mã hóa, dữ liệu, offline, cảm biến",
+  "results": [
+    {
+      "peak_ram_mb": 826.8203125,
+      "init_ms": 421.92,
+      "transcribe_ms": 7757.29,
+      "transcript": "trong trường hợp đó, prom có thể cứu được một phần, nhưng phai tune mới là cách giải quyết gốc hướng dẫn của hớt ninh phai cũng đúng, hướng này dùng whisper môn tí lính của jackboy, rồi phai tune tiếp trên asr, dataset, mục tiêu để cải thiện kết quả cho ngôn ngữ, domain cố thể",
+      "model_id": "M0",
+      "model_name": "Base (FP16)",
+      "file_size_mb": 465.01347255706787
+    },
+    {
+      "peak_ram_mb": 609.6640625,
+      "init_ms": 156.15,
+      "transcribe_ms": 5864.1,
+      "transcript": "trong trường hợp đó, prom có thể cứu được 1 phần nhưng phai tuân mới là cách giải quyết gốc hướng dẫn của hớt ninh phai cũng đúng, hướng này dùng whisper môn tìling của jackboy rồi phai tuân tiếp trên asr, dataset, mục tiêu để cải thiện kết quả cho ngôn ngữ, domain, cụ thể",
+      "model_id": "M1",
+      "model_name": "Q8_0 (8-bit)",
+      "file_size_mb": 252.21310329437256
+    }
+  ]
+}
