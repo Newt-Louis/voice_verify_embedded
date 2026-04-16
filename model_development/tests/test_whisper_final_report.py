@@ -31,7 +31,8 @@ def main():
         {"id": "M0", "name": "Base (FP16)", "path": os.path.join(project_root, "pretrained_models/ggml-whispersmall-multilingual/ggml-small.bin")},
         {"id": "M1", "name": "Q8_0 (8-bit)", "path": os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q8_0/ggml-model-q8_0.bin")},
         {"id": "M2", "name": "Q5_1 (5-bit)", "path": os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q5_1/ggml-model-q5_1.bin")},
-        {"id": "M3", "name": "Q4_1 (4-bit)", "path": os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q4_1/ggml-model-q4_1.bin")}
+        {"id": "M3", "name": "Q5_0 (5-bit)", "path": os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q5_0/ggml-model-q5_0.bin")},
+        {"id": "M4", "name": "Q4_1 (4-bit)", "path": os.path.join(project_root, "quantization/ggml-whispersmall-multilingual/q4_1/ggml-model-q4_1.bin")}
     ]
     
     test_audio_m4a = os.path.join(project_root, "my_test_voice/pharse_2/my_voice_vie_1.m4a")

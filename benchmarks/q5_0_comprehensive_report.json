@@ -1,0 +1,47 @@
+{
+  "date": "2026-04-17 00:13:23",
+  "model": "Q5_0",
+  "description": "Benchmark cho model Q5_0 với beam-size từ 1 đến 5",
+  "data": [
+    {
+      "peak_ram_mb": 364.8203125,
+      "transcribe_ms": 2400.63,
+      "transcript": "giọng nói của tôi là chịu khóa xác thật danh tính",
+      "beam_size": 1,
+      "model_name": "Q5_0 (5-bit)",
+      "file_size_mb": 167.09295558929443
+    },
+    {
+      "peak_ram_mb": 421.9453125,
+      "transcribe_ms": 2438.26,
+      "transcript": "Giọng nói của tôi là chịu khóa xác thật danh tính",
+      "beam_size": 2,
+      "model_name": "Q5_0 (5-bit)",
+      "file_size_mb": 167.09295558929443
+    },
+    {
+      "peak_ram_mb": 441.50390625,
+      "transcribe_ms": 2468.47,
+      "transcript": "Giọng nói của tôi là chịu khóa xác thật danh tính",
+      "beam_size": 3,
+      "model_name": "Q5_0 (5-bit)",
+      "file_size_mb": 167.09295558929443
+    },
+    {
+      "peak_ram_mb": 460.48046875,
+      "transcribe_ms": 2513.08,
+      "transcript": "giọng nói của tôi là chịu khóa xác thật danh tính",
+      "beam_size": 4,
+      "model_name": "Q5_0 (5-bit)",
+      "file_size_mb": 167.09295558929443
+    },
+    {
+      "peak_ram_mb": 480.03125,
+      "transcribe_ms": 2702.86,
+      "transcript": "Giọng nói của tôi là chịu khóa xác thật danh tính",
+      "beam_size": 5,
+      "model_name": "Q5_0 (5-bit)",
+      "file_size_mb": 167.09295558929443
+    }
+  ]
+}
