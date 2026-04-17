@@ -6,8 +6,13 @@ import numpy as np
 
 class WhisperEngine:
     def __init__(self, model_path, executable_path):
-        self.model_path = model_path
-        self.executable_path = executable_path
+        # Tự động điều chỉnh đường dẫn theo OS
+        self.model_path = os.path.abspath(model_path)
+        self.executable_path = os.path.abspath(executable_path)
+        
+        # Nếu là Windows, thêm đuôi .exe nếu chưa có
+        if sys.platform == "win32" and not self.executable_path.lower().endswith(".exe"):
+            self.executable_path += ".exe"
         
         if not os.path.exists(self.model_path):
             print(f"[Whisper] Cảnh báo: Không tìm thấy mô hình tại {self.model_path}")
