@@ -1,0 +1,9 @@
+kivy
+kivymd
+numpy
+sounddevice
+onnxruntime
+torchaudio
+torch
+# soundfile # nếu cần
+# pyaudio # nếu dùng thay cho sounddevice
