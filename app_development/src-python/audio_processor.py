@@ -1,6 +1,6 @@
 import numpy as np
 import sounddevice as sd
-import threading
+import threading, os
 import queue
 import time
 
@@ -29,14 +29,49 @@ class AudioProcessor:
 
     def start(self):
         self.is_running = True
-        self.stream = sd.InputStream(
-            samplerate=self.sample_rate,
-            channels=1,
-            dtype='float32',
-            callback=self._audio_callback
-        )
-        self.stream.start()
-        print("[Audio] Đã bắt đầu luồng ghi âm.")
+        try:
+            # Kiểm tra xem có thiết bị âm thanh nào không
+            devices = sd.query_devices()
+            if not devices:
+                raise RuntimeError("No audio devices found")
+                
+            self.stream = sd.InputStream(
+                samplerate=self.sample_rate,
+                channels=1,
+                dtype='float32',
+                callback=self._audio_callback
+            )
+            self.stream.start()
+            print("[Audio] Đã bắt đầu luồng ghi âm từ MICRO.")
+        except Exception as e:
+            print(f"[Audio] CẢNH BÁO: Không thể mở Micro ({e}). Chuyển sang chế độ MÔ PHỎNG.")
+            self.stream = None
+            # Chạy một thread để giả lập micro từ file
+            threading.Thread(target=self._simulated_mic_loop, daemon=True).start()
+
+    def _simulated_mic_loop(self):
+        """Giả lập micro bằng cách đọc file âm thanh và đưa vào queue từng phần"""
+        import librosa
+        # Lấy đại một file test trong project
+        test_file = "my_test_voice/pharse_2/eng_1.m4a"
+        if not os.path.exists(test_file):
+            print(f"[Audio] Không tìm thấy file test tại {test_file}")
+            return
+
+        print(f"[Audio] Đang phát mô phỏng từ file: {test_file}")
+        try:
+            # librosa sẽ tự động resample về 16000 cho chúng ta
+            data, _ = librosa.load(test_file, sr=self.sample_rate)
+            
+            step = self.chunk_size
+            for i in range(0, len(data), step):
+                if not self.is_running: break
+                chunk = data[i:i+step]
+                if len(chunk) < step: continue
+                self.audio_queue.put(chunk)
+                time.sleep(0.5) # Giả lập 0.5s thời gian thực
+        except Exception as e:
+            print(f"[Audio] Lỗi khi đọc file mô phỏng: {e}")
 
     def stop(self):
         self.is_running = False
