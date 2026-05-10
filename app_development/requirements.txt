@@ -1,0 +1,10 @@
+kivy
+kivymd
+numpy
+sounddevice
+onnxruntime
+torchaudio
+torch
+librosa
+# soundfile
+# pyaudio
