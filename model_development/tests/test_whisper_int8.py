@@ -7,9 +7,6 @@ import gc
 from transformers import WhisperProcessor, GenerationConfig
 from optimum.onnxruntime import ORTModelForSpeechSeq2Seq
 
-# ==========================================
-# CẤU HÌNH ĐƯỜNG DẪN MỚI NHẤT
-# ==========================================
 MODEL_DIR = "quantization/exports/whisper/v2_int8_dynamic"
 TEST_AUDIO = "my_test_voice/pharse_2/myvoice_Recording_testpass_3.m4a"
 

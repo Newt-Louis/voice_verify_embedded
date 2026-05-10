@@ -2,9 +2,6 @@ import torch, gc, os, time, psutil, subprocess, json, torchaudio
 import onnxruntime as ort
 import numpy as np
 
-# ==========================================
-# CẤU HÌNH TEST MỐC 2 (STATIC VS DYNAMIC)
-# ==========================================
 VOICE_DIR = "my_test_voice/pharse_2"
 ALL_FILES = [
     "eng_1.m4a", "eng_2.m4a", "vie_1.m4a", "vie_2.m4a",
@@ -95,7 +92,7 @@ def run_test():
     print(" [MỐC 2] KIỂM TRA TOÀN DIỆN: ĐỘ TRỄ, RAM & ĐỘ CHÍNH XÁC (INT8)")
     print("=" * 70)
 
-    # 1. Nạp sẵn dữ liệu âm thanh (tránh đo nhầm thời gian/RAM đọc ổ đĩa)
+    # Nạp sẵn dữ liệu âm thanh
     print("[*] Đang nạp và trích xuất Fbank dữ liệu test...")
     test_data = []
     for f_name in ALL_FILES:
@@ -104,7 +101,7 @@ def run_test():
         if sig is not None:
             test_data.append({"name": f_name, "feats": extract_feats(sig)})
 
-    # 2. Chạy FP32 để lấy Ground Truth (Làm mốc so sánh Accuracy)
+    # Chạy FP32 để lấy Ground Truth (Làm mốc so sánh Accuracy)
     print("[*] Đang chạy bản FP32 Gốc để lấy Baseline...")
     gc.collect()
     sess_fp32 = ort.InferenceSession(FP32_PATH, providers=['CPUExecutionProvider'])
@@ -114,17 +111,14 @@ def run_test():
     del sess_fp32
     gc.collect()  # Trả RAM về nguyên trạng
 
-    # 3. Đo lường bản Dynamic
+    # Đo lường bản Dynamic
     print("\n[*] Đang đo lường bản DYNAMIC INT8...")
     dynamic_report = evaluate_model(INT8_DYNAMIC_PATH, "v2_int8_dynamic", fp32_embs, test_data)
 
-    # 4. Đo lường bản Static
+    # Đo lường bản Static
     print("[*] Đang đo lường bản STATIC INT8...")
     static_report = evaluate_model(INT8_STATIC_PATH, "v2_int8_static", fp32_embs, test_data)
 
-    # ==============================
-    # IN KẾT QUẢ THEO FORMAT YÊU CẦU
-    # ==============================
     for data, title in [(dynamic_report, "DYNAMIC (INT8)"), (static_report, "STATIC (INT8)")]:
         print("\n" + "=" * 60)
         print(f" KẾT QUẢ MỐC 2 - {title}")
@@ -135,9 +129,6 @@ def run_test():
         print(f"- Độ trễ TB:     {data['latency_ms']:.2f} ms")
         print(f"- Accuracy Drop: {data['accuracy_drop']:.12f}")
 
-    # ==============================
-    # LƯU LỊCH SỬ JSON
-    # ==============================
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
     history = {}
     if os.path.exists(REPORT_PATH):

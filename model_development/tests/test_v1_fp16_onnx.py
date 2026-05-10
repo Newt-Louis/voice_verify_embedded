@@ -8,9 +8,6 @@ import subprocess
 import json
 import torchaudio
 
-# ==========================================
-# CẤU HÌNH TRỎ VÀO MODEL PROPER
-# ==========================================
 VOICE_DIR = "my_test_voice/pharse_2"
 STRANGER_FILES = ["eng_1.m4a", "eng_2.m4a", "vie_1.m4a", "vie_2.m4a"]
 OWNER_FILES = [
@@ -21,7 +18,7 @@ OWNER_FILES = [
 ALL_FILES = STRANGER_FILES + OWNER_FILES
 
 FP32_PATH = "quantization/exports/ecapa/v0_float32/ecapa_fp32.onnx"
-# Chuyển sang model PROPER (Mốc 1 đúng mục tiêu)
+# Chuyển sang model PROPER
 FP16_PATH = "quantization/exports/ecapa/v1_fp16/ecapa_fp16_proper.onnx"
 REPORT_PATH = "benchmarks/quantization_report.json"
 
@@ -83,12 +80,12 @@ def run_test():
         
         feats = extract_feats(sig)
         
-        # A. FP32
+        # FP32
         t0 = time.perf_counter()
         emb_fp32 = sess_fp32.run(None, {'input': feats})[0].flatten()
         fp32_time = (time.perf_counter() - t0) * 1000
         
-        # B. FP16 Proper
+        # FP16 Proper
         t1 = time.perf_counter()
         emb_fp16 = sess_fp16.run(None, {'input': feats})[0].flatten()
         fp16_time = (time.perf_counter() - t1) * 1000

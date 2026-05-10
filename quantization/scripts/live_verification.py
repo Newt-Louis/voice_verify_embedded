@@ -16,19 +16,14 @@ def _patched_download(*args, **kwargs):
         kwargs['token'] = kwargs.pop('use_auth_token')
     filename = kwargs.get('filename') or (args[1] if len(args) > 1 else "")
     if "custom.py" in filename:
-        # Nếu nó đòi custom.py, tạo ngay 1 file rỗng và trả về đường dẫn
         dummy_path = os.path.abspath("dummy_custom.py")
         if not os.path.exists(dummy_path):
             with open(dummy_path, "w") as f:
                 f.write("# File giả mạo để lừa SpeechBrain bỏ qua lỗi 404\n")
         return dummy_path
-        # Các file khác (weights, config) thì vẫn tải bình thường
     return _orig_download(*args, **kwargs)
 huggingface_hub.hf_hub_download = _patched_download
 
-# ==========================================
-# CẤU HÌNH THỬ NGHIỆM THỰC TẾ
-# ==========================================
 VOICE_DIR = "my_test_voice/pharse_2"
 ENROLLMENT_FILES = [
     "my_voice_eng_1.m4a",

@@ -6,7 +6,7 @@ import torchaudio
 import subprocess
 from onnxruntime.quantization import CalibrationDataReader
 
-# Patch Torchaudio (vết sẹo từ Mốc 0)
+# Patch Torchaudio
 if not hasattr(torchaudio, 'list_audio_backends'):
     torchaudio.list_audio_backends = lambda: ["soundfile"]
 

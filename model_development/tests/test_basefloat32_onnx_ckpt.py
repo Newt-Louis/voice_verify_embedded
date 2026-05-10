@@ -8,9 +8,6 @@ import subprocess
 import json
 import torchaudio
 
-# ==========================================
-# 0. PATCH LỖI THƯ VIỆN & CẤU HÌNH
-# ==========================================
 if not hasattr(torchaudio, 'list_audio_backends'):
     torchaudio.list_audio_backends = lambda: ["soundfile"]
 
@@ -66,23 +63,23 @@ def run_test():
     print(" [PHASE 0] TEST ĐỐI SOÁT: PYTORCH VS ONNX FP32")
     print("="*60)
     
-    # 1. Đo Baseline RAM
+    # Đo Baseline RAM
     base_ram = get_ram()
     
-    # 2. Load PyTorch Model
+    # Load PyTorch Model
     print("[*] Đang nạp mô hình PyTorch (SpeechBrain)...")
     classifier = EncoderClassifier.from_hparams(
         source="speechbrain/spkrec-ecapa-voxceleb",
         savedir="pretrained_models/ecapa"
     )
     
-    # 3. Load ONNX Model
+    # Load ONNX Model
     print("[*] Đang nạp mô hình ONNX...")
     onnx_start_ram = get_ram()
     session = ort.InferenceSession(ONNX_PATH, providers=['CPUExecutionProvider'])
     onnx_static_ram = get_ram() - onnx_start_ram
     
-    # 4. Thực hiện Inference và đo lường
+    # Thực hiện Inference và đo lường
     latencies = []
     cosine_diffs = []
     
@@ -96,7 +93,7 @@ def run_test():
         sig = load_audio(f_path)
         if sig is None: continue
         
-        # A. Chạy PyTorch
+        # Chạy PyTorch
         with torch.no_grad():
             feats = classifier.mods.compute_features(sig)
             feats = classifier.mods.mean_var_norm(feats, torch.ones(1))
@@ -105,13 +102,13 @@ def run_test():
             pt_emb = classifier.mods.embedding_model(feats).squeeze().numpy()
             pt_time = (time.perf_counter() - t0) * 1000
             
-        # B. Chạy ONNX
+        # Chạy ONNX
         t1 = time.perf_counter()
         onnx_outputs = session.run(None, {'input': feats.numpy()})
         onnx_emb = onnx_outputs[0].flatten()
         onnx_time = (time.perf_counter() - t1) * 1000
         
-        # C. So sánh (Cosine Similarity)
+        # So sánh (Cosine Similarity)
         norm_a = np.linalg.norm(pt_emb)
         norm_b = np.linalg.norm(onnx_emb)
         cos_sim = np.dot(pt_emb, onnx_emb) / (norm_a * norm_b)
@@ -125,7 +122,7 @@ def run_test():
         current_ram = get_ram()
         if current_ram > peak_ram: peak_ram = current_ram
 
-    # 5. Tổng hợp dữ liệu
+    # Tổng hợp dữ liệu
     final_data = {
         "version": "v0_float32",
         "storage_mb": float(os.path.getsize(ONNX_PATH) / (1024 * 1024)),
