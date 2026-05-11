@@ -21,7 +21,7 @@ def main():
         sys.exit(1)
         
     if not os.path.exists(quantize_tool):
-        print(f"LỖI: Không tìm thấy công cụ quantize tại {quantize_tool}. Hãy chắc chắn bạn đã build whisper.cpp thành công.")
+        print(f"LỖI: Không tìm thấy công cụ quantize tại {quantize_tool}.")
         sys.exit(1)
         
     print(f"--- BẮT ĐẦU LƯỢNG TỬ HÓA Q8_0 ---")
